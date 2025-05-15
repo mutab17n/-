@@ -1,0 +1,33 @@
+import os
+from telegram.ext import Updater, MessageHandler, Filters
+from dotenv import load_dotenv
+
+# تحميل التوكن من ملف .env
+load_dotenv()
+TOKEN = os.getenv("BOT_TOKEN")
+
+# وظيفة الرد على رسالة تحتوي على كلمة "القوانين"
+def reply_to_law(update, context):
+    msg = update.message.text.lower()
+    if "القوانين" in msg:
+        response = (
+            "هذه هي القوانين:\n"
+            "1. ممنوع تسوي تجمعات، التجمعات فقط الي يساويها المالك أو التواصل معه خاص\n"
+            "2. احترام كافة الأعضاء\n"
+            "3. ممنوع الشتم بكافة أنواعه\n"
+            "4. ممنوع طلب رتبة أو طلب معلوماتك\n"
+            "5. ممنوع التحدث بالمواضيع السياسية والدينية\n"
+            "6. ممنوع السبام (تكرار الرسائل)\n"
+            "7. ممنوع تنشر أشياء بالقروب مثل قروبات أو تطبيقات خارج نطاق الألعاب\n"
+            "8. ممنوع ترسل صور خارج نطاق الألعاب"
+        )
+        context.bot.send_message(chat_id=update.effective_chat.id, text=response)
+
+# تشغيل البوت
+updater = Updater(TOKEN, use_context=True)
+dp = updater.dispatcher
+dp.add_handler(MessageHandler(Filters.text & ~Filters.command, reply_to_law))
+
+print("Bot is running...")
+updater.start_polling()
+updater.idle()
